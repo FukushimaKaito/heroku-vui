@@ -1,6 +1,6 @@
 /*-----------
 ref] json  https://qiita.com/nayuneko/items/2ec20ba69804e8bf7ca3
-ref 
+ref
 2019/05/29 FUKUSHIMA Kaito
 --------*/
 
@@ -10,20 +10,22 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	
-	"net/http"
+
+	_ "alexa"
 	"bytes"
 	"errors"
-	_ "./alexa"
+	"net/http"
 
 	"log"
+
+	"github.com/FukushimaKaito/heroku-vui/alexa"
 )
 
 /** JSONデコード用の構造体 **/
-type Value struct{
-	Light	float32	`json:"d1"`
-	Vib	float32	`json:"d2"`
-	DT	string	`json:"created"`
+type Value struct {
+	Light float32 `json:"d1"`
+	Vib   float32 `json:"d2"`
+	DT    string  `json:"created"`
 }
 
 var (
@@ -172,13 +174,11 @@ func Handler(event alexa.Request) (alexa.Response, error) {
 	return alexa.Response{}, ErrInvalidIntent
 }
 
-
-
-func httpResponse()string{
+func httpResponse() string {
 	//http----------------
-	url :="http://ambidata.io/api/v2/channels/10905/data?readKey=7e7df40858ef249c&n=1"
-	res,err := http.Get(url)
-	if err != nil{
+	url := "http://ambidata.io/api/v2/channels/10905/data?readKey=7e7df40858ef249c&n=1"
+	res, err := http.Get(url)
+	if err != nil {
 		log.Fatal(err)
 	}
 	defer res.Body.Close()
@@ -192,7 +192,7 @@ func httpResponse()string{
 	return html
 }
 
-func decodeJSON(html string){
+func decodeJSON(html string) {
 	//JSON---------------
 	bytes := []byte(html)
 	// //JSONデコード
@@ -201,8 +201,8 @@ func decodeJSON(html string){
 		log.Fatal(err)
 	}
 	//デコードデータの表示
-	for _, d:=range values{
-		fmt.Printf("%f : %f\n",d.Light,d.Vib)
+	for _, d := range values {
+		fmt.Printf("%f : %f\n", d.Light, d.Vib)
 	}
 }
 
