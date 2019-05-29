@@ -13,6 +13,8 @@ import (
 	
 	"net/http"
 	"bytes"
+	"errors"
+	"./alexa"
 
 	"log"
 )
@@ -23,6 +25,12 @@ type Value struct{
 	Vib	float32	`json:"d2"`
 	DT	string	`json:"created"`
 }
+
+var (
+	// ErrInvalidIntent is error-object
+	ErrInvalidIntent = errors.New("Invalid intent")
+)
+
 
 /*
  * Functions that control the skill's behavior
