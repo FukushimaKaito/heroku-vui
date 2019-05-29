@@ -1,5 +1,6 @@
 /*-----------
 ref] json  https://qiita.com/nayuneko/items/2ec20ba69804e8bf7ca3
+ref 
 2019/05/29 FUKUSHIMA Kaito
 --------*/
 
@@ -12,7 +13,6 @@ import (
 	
 	"net/http"
 	"bytes"
-	"./alexa"
 
 	"log"
 )
