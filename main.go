@@ -14,7 +14,7 @@ import (
 	"net/http"
 	"bytes"
 	"errors"
-	"$GOROOT/alexa"
+	_ "github.com/FukushimaKaito/heroku-vui/alexa"
 
 	"log"
 )
@@ -30,7 +30,6 @@ var (
 	// ErrInvalidIntent is error-object
 	ErrInvalidIntent = errors.New("Invalid intent")
 )
-
 
 /*
  * Functions that control the skill's behavior
