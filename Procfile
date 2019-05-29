@@ -1,1 +1,1 @@
-web: bin\heroku-vui.exe
+web: heroku-vui
