@@ -11,14 +11,13 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	_ "alexa"
 	"bytes"
 	"errors"
 	"net/http"
 
-	"log"
+	"./alexa"
 
-	"github.com/FukushimaKaito/heroku-vui/alexa"
+	"log"
 )
 
 /** JSONデコード用の構造体 **/
