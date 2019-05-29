@@ -15,8 +15,6 @@ import (
 	"errors"
 	"net/http"
 
-	"./alexa"
-
 	"log"
 )
 
