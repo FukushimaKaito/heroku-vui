@@ -1,0 +1,12 @@
+{
+	"name": "家庭菜園",
+	"description": "Kateisaien App",
+	"keywords": [
+		"getting-started",
+		"go",
+		"sample",
+		"example"
+	],
+	"website": "https://github.com/FukushimaKaito/heroku-vui",
+	"repository": "https://github.com/FukushimaKaito/heroku-vui"
+}
