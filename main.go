@@ -14,7 +14,7 @@ import (
 	"net/http"
 	"bytes"
 	"errors"
-	"github.com/FukushimaKaito/heroku-vui//alexa"
+	"github.com/FukushimaKaito/heroku-vui/alexa"
 
 	"log"
 )
