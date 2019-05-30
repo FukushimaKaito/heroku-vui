@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"lambda/messages"
+	"lambdacontext"
 )
 
 type Function struct {
