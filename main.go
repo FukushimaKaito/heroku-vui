@@ -19,7 +19,7 @@ import (
 	"log"
 )
 
-/** JSONデコード用の構造体 **/
+// Value is JSONデコード用の構造体
 type Value struct {
 	Light float32 `json:"d1"`
 	Vib   float32 `json:"d2"`
