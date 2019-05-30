@@ -207,4 +207,5 @@ func decodeJSON(html string) {
 func main() {
 	html := httpResponse()
 	decodeJSON(html)
+	lambda.Start(Handler)
 }
