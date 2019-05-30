@@ -9,7 +9,8 @@ import (
 	"time"
 
 	"lambda/messages"
-	"lambdacontext"
+
+	"lambdacontext.go"
 )
 
 type Function struct {
