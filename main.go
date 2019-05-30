@@ -1,6 +1,6 @@
 /*-----------
-ref] json  https://qiita.com/nayuneko/items/2ec20ba69804e8bf7ca3
-ref
+[ref] json  https://qiita.com/nayuneko/items/2ec20ba69804e8bf7ca3
+[ref] alexa https://github.com/yamaryu0508/alexa-skills-kit-color-expert-go
 2019/05/29 FUKUSHIMA Kaito
 --------*/
 
@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"alexa"
+	"./alexa"
 	"bytes"
 	"errors"
 	"net/http"
