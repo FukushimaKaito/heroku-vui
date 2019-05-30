@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/aws/aws-lambda-go/lambda/messages"
+	"lambda/messages"
 )
 
 type panicInfo struct {
