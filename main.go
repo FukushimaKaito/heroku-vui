@@ -11,7 +11,9 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"./alexa"
+	//"./alexa"
+	"alexa"
+	"lambda"
 	"bytes"
 	"errors"
 	"net/http"
