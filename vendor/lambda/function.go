@@ -8,8 +8,8 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/aws/aws-lambda-go/lambda/messages"
-	"github.com/aws/aws-lambda-go/lambdacontext"
+	"lambda/messages"
+	"lambda/context"
 )
 
 type Function struct {

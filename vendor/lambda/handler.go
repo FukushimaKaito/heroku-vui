@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/aws/aws-lambda-go/lambda/handlertrace"
+	"lambda/handlertrace"
 )
 
 type Handler interface {
