@@ -10,7 +10,7 @@ import (
 
 	"lambda/messages"
 
-	"lambdacontext.go"
+	"lambda/lambdacontext"
 )
 
 type Function struct {
