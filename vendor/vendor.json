@@ -1,5 +1,5 @@
 {
-	"rootPath": "github.com/FukushimaKaito/heroku-vui"
+	"rootPath": "github.com/FukushimaKaito/heroku-vui",
 	"heroku": {
 		"install": [
 			"."
