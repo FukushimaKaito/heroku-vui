@@ -7,10 +7,10 @@ package main
 // [START import_libraries]
 import (
 	"context"
-	"errors"
+	//"errors"
 	"flag"
 	"fmt"
-	"io"
+	//"io"
 	"io/ioutil"
 	"log"
 	"os"

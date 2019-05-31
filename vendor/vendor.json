@@ -1,3 +1,9 @@
 {
 	"rootPath": "github.com/FukushimaKaito/heroku-vui"
+	"heroku": {
+		"install": [
+			"."
+		],
+		"goVersion": "go1.12.5"
+	}
 }
