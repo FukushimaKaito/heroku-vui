@@ -5,9 +5,6 @@
 package main
 
 import (
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
-
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -60,9 +57,4 @@ func decodeJSON(html string) {
 func main() {
 	html := httpResponse()
 	decodeJSON(html)
-	e := echo.New()
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
-	})
-	e.Run(standard.New(":1323"))
 }
