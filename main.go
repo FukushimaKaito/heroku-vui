@@ -10,14 +10,15 @@ import (
 	//"errors"
 	"flag"
 	"fmt"
+
 	//"io"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"net/http"
 
 	dialogflow "cloud.google.com/go/dialogflow/apiv2"
@@ -75,9 +76,9 @@ func main() {
 		fmt.Fprintf(os.Stderr, "<INPUTS> can be a series of text inputs if <OPERATION> is text, or a path to an audio file if <OPERATION> is audio or stream\n")
 	}
 	var projectID, sessionID, languageCode string
-		flag.StringVar(&projectID, "project-id", "", "Google Cloud Platform project ID")
-		flag.StringVar(&sessionID, "session-id", "", "Dialogflow session ID")
-		flag.StringVar(&languageCode, "language-code", "en", "Dialogflow language code from https://dialogflow.com/docs/reference/language; defaults to en")
+	flag.StringVar(&projectID, "project-id", "", "Google Cloud Platform project ID")
+	flag.StringVar(&sessionID, "session-id", "", "Dialogflow session ID")
+	flag.StringVar(&languageCode, "language-code", "jp", "Dialogflow language code from https://dialogflow.com/docs/reference/language; defaults to en")
 
 	flag.Parse()
 
