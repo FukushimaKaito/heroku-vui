@@ -145,8 +145,8 @@ func asknowIntent(r *Request) (*Response, error) {
 	}
 	//デコードデータの表示
 	fmt.Printf("%f : %f\n", values[0].Light, values[0].Vib)
-	
-	msg :=fmt.Sprintf("%s現在の振動値は%fGal 、明るさは%flxです．",values[0].DT,values[0].Vib,values[0].Light)
+	template:="%s現在の振動値は%fGal 、明るさは%flxです．"
+	msg :=fmt.Sprintf(template,values[0].DT,values[0].Vib,values[0].Light)
 	return NewResponse(msg).SetDisplayText(msg), nil
 }
 
