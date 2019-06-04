@@ -28,7 +28,7 @@
 [prune]
   go-tests = true
   unused-packages = true
-
+  
 [metadata.heroku]
   root-package = "github.com/FukushimaKaito/heroku-vui"
   go-version = "go1.12.5"
