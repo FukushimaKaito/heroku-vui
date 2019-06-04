@@ -1,14 +1,14 @@
 package main
 
 import (
-	"net/http"
 	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
-	"os"
 	"io/ioutil"
 	"log"
+	"net/http"
+	"os"
 )
 
 // Value for ambient JSON decode
@@ -20,27 +20,27 @@ type Value struct {
 
 //Request is request from filfullment
 type Request struct {
-	ID  			    string `json:"responseId"`
-	Result struct{
-		Parameters struct{
-			Vegelight   string `json:"Vegelight"`
-		} 					   `json:"parameters"`
-		Intent struct{
+	ID     string `json:"responseId"`
+	Result struct {
+		Parameters struct {
+			Vegelight string `json:"Vegelight"`
+		} `json:"parameters"`
+		Intent struct {
 			DisplayName string `json:"displayName"`
-		} 					   `json:"intent"`
-	}						   `json:"queryResult"`
-	SessionID			string `json:"session"`
+		} `json:"intent"`
+	} `json:"queryResult"`
+	SessionID string `json:"session"`
 }
 
 // Response is response for filfullment
-type Response struct{
+type Response struct {
 	FulfillmentText string `json:"fulfillmentText"`
 }
 
 //NewResponse is new response
 func NewResponse(speech string) *Response {
 	return &Response{
-	//	Speech: speech,
+		//	Speech: speech,
 	}
 }
 
@@ -50,17 +50,16 @@ func (res *Response) SetDisplayText(text string) *Response {
 	return res
 }
 
-
-func main(){
-	http.HandleFunc("/",handler)
+func main() {
+	http.HandleFunc("/", handler)
 	port := os.Getenv("PORT")
-	if port == ""{
+	if port == "" {
 		port = "8080"
 	}
-	http.ListenAndServe(":"+port,nil)
+	http.ListenAndServe(":"+port, nil)
 }
 
-func handler(w http.ResponseWriter,r *http.Request){
+func handler(w http.ResponseWriter, r *http.Request) {
 	req, err := DecodeInput(r)
 	if err != nil {
 		log.Println(err)
@@ -72,9 +71,9 @@ func handler(w http.ResponseWriter,r *http.Request){
 
 	switch intent {
 	case "AskLightIntent":
-		res,err = asklightIntent(req)
+		res, err = asklightIntent(req)
 	case "AskNowdata":
-		res,err=asknowIntent(req)
+		res, err = asknowIntent(req)
 	}
 	if err != nil {
 		log.Println(err)
@@ -82,7 +81,8 @@ func handler(w http.ResponseWriter,r *http.Request){
 
 	if err = EncodeOutput(w, res); err != nil {
 		log.Println(err)
-	}}
+	}
+}
 
 // DecodeInput is decode recvmsg
 func DecodeInput(r *http.Request) (*Request, error) {
@@ -137,16 +137,16 @@ func asklightIntent(r *Request) (*Response, error) {
 	}
 
 	//json count
-	high:=0
-	mid:=0
-	low:=0
-    for i:=0;i< 1440;i++{
-        if values[i].Light > 1000{
-			high ++
-		} else if values[i].Light < 300{
-			low ++
-		} else{
-			mid ++
+	high := 0
+	mid := 0
+	low := 0
+	for i := 0; i < 1440; i++ {
+		if values[i].Light > 1000 {
+			high++
+		} else if values[i].Light < 300 {
+			low++
+		} else {
+			mid++
 		}
 	}
 	//mkmsg
@@ -156,38 +156,38 @@ func asklightIntent(r *Request) (*Response, error) {
 	lightLack := "光が足りていません．"
 	lightMissing := "は登録されていません．🙇"
 
-	msg:="テスト"
-    if r.Result.Parameters.Vegelight == "ミニトマト"{// positive class
-        if high > 360{
-            msg = lightJust
-		} else if high + mid > 360{
-            msg = lightHigher
-		} else{
-            msg = lightLack
+	msg := ""
+	if r.Result.Parameters.Vegelight == "ミニトマト" { // positive class
+		if high > 360 {
+			msg = fmt.Sprintf(lightJust)
+		} else if high+mid > 360 {
+			msg = fmt.Sprintf(lightHigher)
+		} else {
+			msg = fmt.Sprintf(lightLack)
 		}
-	} else if r.Result.Parameters.Vegelight == "ジャガイモ"{// negative class
-        if high > 30 || mid > 180{
-            msg = lightHighest
-		}else if high + mid > 60{
-            msg = lightJust
-		}else{
-            msg = lightLack
+	} else if r.Result.Parameters.Vegelight == "ジャガイモ" { // negative class
+		if high > 30 || mid > 180 {
+			msg = fmt.Sprintf(lightHighest)
+		} else if high+mid > 60 {
+			msg = fmt.Sprintf(lightJust)
+		} else {
+			msg = fmt.Sprintf(lightLack)
 		}
-	}else if r.Result.Parameters.Vegelight =="大葉"{// half class
-        if high > 120 || mid > 180{
-			msg = lightHighest
-		} else if high + mid > 300{
-            msg = lightJust
-		} else{
-            msg = lightLack
+	} else if r.Result.Parameters.Vegelight == "大葉" { // half class
+		if high > 120 || mid > 180 {
+			msg = fmt.Sprintf(lightHighest)
+		} else if high+mid > 300 {
+			msg = fmt.Sprintf(lightJust)
+		} else {
+			msg = fmt.Sprintf(lightLack)
 		}
-	}else{
-		msg = r.Result.Parameters.Vegelight + lightMissing
+	} else {
+		msg = fmt.Sprintf(r.Result.Parameters.Vegelight + lightMissing)
 	}
 	return NewResponse(msg).SetDisplayText(msg), nil
 }
 
-// asknowIntent is mk asknowIntent msg 
+// asknowIntent is mk asknowIntent msg
 func asknowIntent(r *Request) (*Response, error) {
 	//ambient
 	url := "http://ambidata.io/api/v2/channels/10905/data?readKey=7e7df40858ef249c&n=1"
@@ -213,8 +213,8 @@ func asknowIntent(r *Request) (*Response, error) {
 	}
 	//デコードデータの表示
 	fmt.Printf("%f : %f\n", values[0].Light, values[0].Vib)
-	template:="%s現在の振動値は%.2fGal 、明るさは%.2flxです．"
-	msg :=fmt.Sprintf(template,values[0].DT,values[0].Vib,values[0].Light)
+	template := "%s現在の振動値は%.2fGal 、明るさは%.2flxです．"
+	msg := fmt.Sprintf(template, values[0].DT, values[0].Vib, values[0].Light)
 	return NewResponse(msg).SetDisplayText(msg), nil
 }
 
