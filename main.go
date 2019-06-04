@@ -105,40 +105,40 @@ type Value struct {
 // 	http.ListenAndServe("0.0.0.0:8080", nil)
 // }
 
-const (
-	//WelcomeIntent is welcome intent message
-	WelcomeIntent = "input.welcome"
-	//AskLightIntent is AskLightIntent
-	AskLightIntent = "input.asklight"
-)
+// const (
+// 	//WelcomeIntent is welcome intent message
+// 	WelcomeIntent = "input.welcome"
+// 	//AskLightIntent is AskLightIntent
+// 	AskLightIntent = "input.asklight"
+// )
 
-func mainHandler(w http.ResponseWriter, r *http.Request) {
-	req, err := DecodeInput(r)
-	if err != nil {
-		log.Println(err)
-		return
-	}
+// func mainHandler(w http.ResponseWriter, r *http.Request) {
+// 	req, err := DecodeInput(r)
+// 	if err != nil {
+// 		log.Println(err)
+// 		return
+// 	}
 
-	var res *Response
-	intent := req.GetIntent()
+// 	var res *Response
+// 	intent := req.GetIntent()
 
-	switch intent {
-	case WelcomeIntent:
-		res, err = welcomeIntent(req)
-	case AskLightIntent:
-		res, err = askLightIntent(req)
-	// case AskNowdata:
-	// 	res, err = AskNowdata(req)
-	}
+// 	switch intent {
+// 	case WelcomeIntent:
+// 		res, err = welcomeIntent(req)
+// 	case AskLightIntent:
+// 		res, err = askLightIntent(req)
+// 	// case AskNowdata:
+// 	// 	res, err = AskNowdata(req)
+// 	}
 
-	if err != nil {
-		log.Println(err)
-	}
+// 	if err != nil {
+// 		log.Println(err)
+// 	}
 
-	if err = EncodeOutput(w, res); err != nil {
-		log.Println(err)
-	}
-}
+// 	if err = EncodeOutput(w, res); err != nil {
+// 		log.Println(err)
+// 	}
+// }
 
 
 // func DetectIntentText(projectID, sessionID, text, languageCode string) (string, error) {
@@ -171,44 +171,44 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 // }
 
 // DecodeInput is Decode Input.
-func DecodeInput(r *http.Request) (*Request, error) {
-	var req Request
-	var buf bytes.Buffer
-	tee := io.TeeReader(r.Body, &buf)
-	defer r.Body.Close()
-	err := json.NewDecoder(tee).Decode(&req)
-	if err != nil {
-		// return nil, fmt.Errorf("decode error: %v", err)
-		b, err := ioutil.ReadAll(&buf)
-		if err != nil {
-			return nil, fmt.Errorf("ioutil error: %v", err)
-		}
-		log.Printf("%s\n", b)
-	}
-	return &req, nil
-}
+// func DecodeInput(r *http.Request) (*Request, error) {
+// 	var req Request
+// 	var buf bytes.Buffer
+// 	tee := io.TeeReader(r.Body, &buf)
+// 	defer r.Body.Close()
+// 	err := json.NewDecoder(tee).Decode(&req)
+// 	if err != nil {
+// 		// return nil, fmt.Errorf("decode error: %v", err)
+// 		b, err := ioutil.ReadAll(&buf)
+// 		if err != nil {
+// 			return nil, fmt.Errorf("ioutil error: %v", err)
+// 		}
+// 		log.Printf("%s\n", b)
+// 	}
+// 	return &req, nil
+// }
 
-// EncodeOutput is Encode Output
-func EncodeOutput(w http.ResponseWriter, res *Response) error {
-	w.Header().Set("Content-Type", "application/json")
-	err := json.NewEncoder(w).Encode(res)
-	if err != nil {
-		log.Printf("encode error: %v\n", err)
-	}
-	return nil
-}
+// // EncodeOutput is Encode Output
+// func EncodeOutput(w http.ResponseWriter, res *Response) error {
+// 	w.Header().Set("Content-Type", "application/json")
+// 	err := json.NewEncoder(w).Encode(res)
+// 	if err != nil {
+// 		log.Printf("encode error: %v\n", err)
+// 	}
+// 	return nil
+// }
 
-func welcomeIntent(r *Request) (*Response, error) {
-	template := `家庭菜園支援VUI APPです．`
-	voice := fmt.Sprintf(template)
-	return NewResponse(voice).SetDisplayText(voice), nil
-}
+// func welcomeIntent(r *Request) (*Response, error) {
+// 	template := `家庭菜園支援VUI APPです．`
+// 	voice := fmt.Sprintf(template)
+// 	return NewResponse(voice).SetDisplayText(voice), nil
+// }
 
-func askLightIntent(r *Request) (*Response, error) {
-	template := `askLightIntentがcallされました．`
-	voice := fmt.Sprintf(template)
-	return NewResponse(voice).SetDisplayText(voice), nil
-}
+// func askLightIntent(r *Request) (*Response, error) {
+// 	template := `askLightIntentがcallされました．`
+// 	voice := fmt.Sprintf(template)
+// 	return NewResponse(voice).SetDisplayText(voice), nil
+// }
 
 func httpResponse() string {
 	//http----------------
