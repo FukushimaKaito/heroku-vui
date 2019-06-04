@@ -98,8 +98,7 @@ func EncodeOutput(w http.ResponseWriter, res *Response) error {
 }
 
 func welcomeIntent(r *Request) (*Response, error) {
-	template := `こんにちは。時刻は%sです。現在の天気は%s、%.1f度です。` +
-		`気圧は%dヘクトパスカル、曇り度数は%dです。湿度は%dパーセントです。風速は秒速%.1fメートル、風光は%sです。`
+	template := `こんにちは。`
 	msg := fmt.Sprintf(template)
 	return NewResponse(msg).SetDisplayText(msg), nil
 }
