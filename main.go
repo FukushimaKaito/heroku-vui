@@ -47,6 +47,9 @@ func (res *Response) SetDisplayText(text string) *Response {
 func main(){
 	http.HandleFunc("/",handler)
 	port := os.Getenv("PORT")
+	if port == ""{
+		port = "8080"
+	}
 	http.ListenAndServe(":"+port,nil)
 }
 
