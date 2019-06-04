@@ -1,112 +1,45 @@
 package main
 
-// https://dialogflow.com/docs/fulfillment#request
+// Request V2 API
+// https://dialogflow.com/docs/fulfillment/how-it-works
 type Request struct {
-	Lang            string           `json:"lang"`
-	Status          *RequestStatus   `json:"status"`
-	Timestamp       string           `json:"timestamp"`
-	SessionID       string           `json:"sessionId"`
-	Result          *RequestResult   `json:"result"`
-	ID              string           `json:"id"`
-	OriginalRequest *OriginalRequest `json:"originalRequest"`
+	ID        string                 `json:"responseId"`
+	SessionID string                 `json:"session"`
+	Result    *RequestResult         `json:"queryResult"`
+	ODIR      map[string]interface{} `json:"originalDetectIntentRequest"`
 }
 
+// GetIntent is Request get
 func (req *Request) GetIntent() string {
-	return req.Result.Action
+	return req.Result.Intent
 }
 
-type RequestStatus struct {
-	ErrorType string `json:"errorType"`
-	Code      int    `json:"code"`
-}
-
+// RequestResult into Request V2 API
 type RequestResult struct {
-	Parameters       map[string]interface{} `json:"parameters"`
-	Contexts         []*Context             `json:"contexts"`
-	ResolvedQuery    string                 `json:"resolvedQuery"`
-	Source           string                 `json:"source"`
-	Score            float32                `json:"score"`
-	Speech           string                 `json:"speech"`
-	Fulfillment      *RequestFulfillment    `json:"fulfillment"`
-	ActionIncomplete bool                   `json:"actionIncomplete"`
-	Action           string                 `json:"action"`
-	Metadata         *Metadata              `json:"metadata"`
+	Text                      string                 `json:"queryText"`
+	Parameters                *Parameter `json:"parameters"`
+	AllRequiredParamsPresent  bool                   `json:"allRequiredParamsPresent"`
+	FulfillmentText           string                 `json:"fulfillmentText"`
+	FulfillmentMessages       map[string]interface{} `json:"fulfillmentMessages"`
+	OutputContexts            map[string]interface{} `json:"outputContexts"`
+	Intent                    map[string]interface{} `json:"intent"`
+	IntentDetectionConfidence int8                   `json:"intentDetectionConfidence"`
+	DiagnosticInfo            map[string]interface{} `json:"diagnosticInfo"`
+	LanguageCode              string                 `json:"languageCode"`
 }
 
-type Context struct {
-	ContextName string                 `json:"name"`
-	LifeSpan    int                    `json:"lifespan"`
-	Parameters  map[string]interface{} `json:"parameters"`
+type Parameter struct{
+	name string `json:"parameter_name"`
+	value int `json:"parameter_value"`
 }
 
-type RequestFulfillment struct {
-	Messages []*Message `json:"messages"`
-	Speech   string     `json:"speech"`
-}
-
-type Message struct {
-	Speech string `json:"speech"`
-	Type   int    `json:"type"`
-}
-
-// TODO: check if there are other values than "true" and "false" for webhookUsed and webhookForSlogFillingUsed.
-type Metadata struct {
-	IntentID                  string `json:"intentId"`
-	WebhookForSlotFillingUsed string `json:"webhookForSlotFillingUsed"`
-	IntentName                string `json:"intentName"`
-	WebhookUsed               string `json:"webhookUsed"`
-}
-
-type OriginalRequest struct {
-	Source string               `json:"source"`
-	Data   *OriginalRequestData `json:"data"`
-}
-
-type OriginalRequestData struct {
-	Inputs       []*InputData  `json:"inputs"`
-	User         *User         `json:"user"`
-	Conversation *Conversation `json:"conversation"`
-}
-
-type InputData struct {
-	RawInputs []*RawInput  `json:"raw_inputs"`
-	Intent    string       `json:"intent"`
-	Arguments []*Arguments `json:"arguments"`
-}
-
-type RawInput struct {
-	Query     string `json:"query"`
-	InputType int    `json:"input_type"`
-}
-
-type Arguments struct {
-	TextValue string `json:"text_value"`
-	RawText   string `json:"raw_text"`
-	Name      string `json:"name"`
-}
-
-type User struct {
-	UserID string `json:"user_id"`
-}
-
-type Conversation struct {
-	ConversationID    string      `json:"conversation_id"`
-	Type              interface{} `json:"type"`
-	ConversationToken string      `json:"conversation_token"`
-}
-
-// https://dialogflow.com/docs/fulfillment#response
-// https://developers.google.com/actions/dialogflow/webhook#response
-// https://developers.google.com/actions/reference/rest/Shared.Types/AppResponse
 type Response struct {
-	Speech        string         `json:"speech"`
-	DisplayText   string         `json:"displayText"`
-	ContextOut    []*Context     `json:"contextOut"`
+	fulfillmentText string `json:fulfillmentText`
+	fulfillmentMessages[]  map[string]interface{} `json:"fulfillmentMessages"`
 	Source        string         `json:"source"`
-	FollowupEvent *FollowupEvent `json:"followupEvent"`
-	Data          struct {
-		Google *GoogleData `json:"google"`
-	} `json:"data"`
+	payload map[string]interface{} `json:"payload"`
+	outputContexts[]	map[string]interface{} `json:"outputContexts"`
+	followupEventInput	map[string]interface{} `json:"followupEventInput"`
 }
 
 func NewResponse(speech string) *Response {

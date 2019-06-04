@@ -1,20 +1,96 @@
 /*-----------
-https://github.com/ymotongpoo/go-dialogflow-fulfillment
 2019/05/29 FUKUSHIMA Kaito
 --------*/
 
 package main
 
 import (
-	"bytes"
-	"encoding/json"
-
-	"fmt"
-	"io"
-	"io/ioutil"
-	"log"
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 	"net/http"
+	"bytes"
+	"os"
+	"net/url"
+	"fmt"
+	// "bytes"
+	// "encoding/json"
+	// "fmt"
+	// "io"
+	// "io/ioutil"
+	// "log"
+	// "net/http"
+
+	//"cloud.google.com/go/dialogflow/apiv2"
 )
+
+var(
+	token  string = "" // change token
+	apiUrl string = "https://slack.com/api/chat.postMessage"
+	e             = echo.New()
+)
+
+
+/**
+ * 指定した文字列をSlackにポストする
+ */
+func postToSlack(message string) {
+	data := url.Values{}
+	data.Set("token", token)
+	data.Add("channel", "#general")
+	data.Add("username", "robo-jiro")
+	data.Add("text", fmt.Sprintf("%s", message))
+
+	client := &http.Client{}
+	r, _ := http.NewRequest("POST", fmt.Sprintf("%s", apiUrl), bytes.NewBufferString(data.Encode()))
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, _ := client.Do(r)
+	fmt.Println(resp.Status)
+
+}
+
+func main() {
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+	// ルーティング
+	e.POST("/", GoogleAssistant())
+
+	e.Start(":" + os.Getenv("PORT"))
+}
+
+type Parameters struct {
+	Any string `json:any`
+}
+
+type Result struct {
+	Parameters Parameters `json:parameters`
+}
+
+type GARequest struct {
+	Id        string `json:"id"`
+	Result    Result `json:result`
+}
+
+func GoogleAssistant() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		u := new(GARequest)
+		c.Bind(u);
+		postToSlack(u.Result.Parameters.Any)
+		return c.String(http.StatusOK, "")
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Value is JSONデコード用の構造体
 type Value struct {
@@ -23,10 +99,10 @@ type Value struct {
 	DT    string  `json:"created"`
 }
 
-func main() {
-	http.HandleFunc("/", mainHandler)
-	http.ListenAndServe("0.0.0.0:8080", nil)
-}
+// func main() {
+// 	http.HandleFunc("/", mainHandler)
+// 	http.ListenAndServe("0.0.0.0:8080", nil)
+// }
 
 const (
 	//WelcomeIntent is welcome intent message
@@ -50,6 +126,8 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 		res, err = welcomeIntent(req)
 	case AskLightIntent:
 		res, err = askLightIntent(req)
+	// case AskNowdata:
+	// 	res, err = AskNowdata(req)
 	}
 
 	if err != nil {
@@ -60,6 +138,36 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 }
+
+
+// func DetectIntentText(projectID, sessionID, text, languageCode string) (string, error) {
+//         ctx := context.Background()
+
+//         sessionClient, err := dialogflow.NewSessionsClient(ctx)
+//         if err != nil {
+//                 return "", err
+//         }
+//         defer sessionClient.Close()
+
+//         if projectID == "" || sessionID == "" {
+//                 return "", errors.New(fmt.Sprintf("Received empty project (%s) or session (%s)", projectID, sessionID))
+//         }
+
+//         sessionPath := fmt.Sprintf("projects/%s/agent/sessions/%s", projectID, sessionID)
+//         textInput := dialogflowpb.TextInput{Text: text, LanguageCode: languageCode}
+//         queryTextInput := dialogflowpb.QueryInput_Text{Text: &textInput}
+//         queryInput := dialogflowpb.QueryInput{Input: &queryTextInput}
+//         request := dialogflowpb.DetectIntentRequest{Session: sessionPath, QueryInput: &queryInput}
+
+//         response, err := sessionClient.DetectIntent(ctx, &request)
+//         if err != nil {
+//                 return "", err
+//         }
+
+//         queryResult := response.GetQueryResult()
+//         fulfillmentText := queryResult.GetFulfillmentText()
+//         return fulfillmentText, nil
+// }
 
 // DecodeInput is Decode Input.
 func DecodeInput(r *http.Request) (*Request, error) {
