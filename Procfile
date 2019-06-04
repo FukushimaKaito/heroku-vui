@@ -1,1 +1,1 @@
-web: bin/kateisaien
+web: ./bin/heroku-vui
