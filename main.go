@@ -156,7 +156,7 @@ func asklightIntent(r *Request) (*Response, error) {
 	lightLack := "光が足りていません．"
 	lightMissing := "は登録されていません．🙇"
 
-	msg:=""
+	msg:="テスト"
     if r.Result.Parameters.Vegelight == "ミニトマト"{// positive class
         if high > 360{
             msg = lightJust
