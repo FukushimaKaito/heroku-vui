@@ -1,5 +1,0 @@
-package: googlehome-test
-import:
-- package: github.com/labstack/echo
-  subpackages:
-  - middleware

@@ -5,93 +5,16 @@
 package main
 
 import (
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
-	"net/http"
 	"bytes"
-	"os"
-	"net/url"
+	"encoding/json"
 	"fmt"
+	"io"
+	"io/ioutil"
+	"log"
+	"net/http"
 
-	// "bytes"
-	 "encoding/json"
-	// "fmt"
-	// "io"
-	 "io/ioutil"
-	 "log"
-	// "net/http"
-
-	//"cloud.google.com/go/dialogflow/apiv2"
+	"cloud.google.com/go/dialogflow/apiv2"
 )
-
-var(
-	token  string = "" // change token
-	apiUrl string = "https://slack.com/api/chat.postMessage"
-	e             = echo.New()
-)
-
-
-/**
- * 指定した文字列をSlackにポストする
- */
-func postToSlack(message string) {
-	data := url.Values{}
-	data.Set("token", token)
-	data.Add("channel", "#general")
-	data.Add("username", "robo-jiro")
-	data.Add("text", fmt.Sprintf("%s", message))
-
-	client := &http.Client{}
-	r, _ := http.NewRequest("POST", fmt.Sprintf("%s", apiUrl), bytes.NewBufferString(data.Encode()))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-
-	resp, _ := client.Do(r)
-	fmt.Println(resp.Status)
-
-}
-
-func main() {
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-	// ルーティング
-	e.POST("/", GoogleAssistant())
-
-	e.Start(":" + os.Getenv("PORT"))
-}
-
-type Parameters struct {
-	Any string `json:any`
-}
-
-type Result struct {
-	Parameters Parameters `json:parameters`
-}
-
-type GARequest struct {
-	Id        string `json:"id"`
-	Result    Result `json:result`
-}
-
-func GoogleAssistant() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		u := new(GARequest)
-		c.Bind(u);
-		postToSlack(u.Result.Parameters.Any)
-		return c.String(http.StatusOK, "")
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Value is JSONデコード用の構造体
 type Value struct {
@@ -100,115 +23,115 @@ type Value struct {
 	DT    string  `json:"created"`
 }
 
-// func main() {
-// 	http.HandleFunc("/", mainHandler)
-// 	http.ListenAndServe("0.0.0.0:8080", nil)
-// }
+func main() {
+	http.HandleFunc("/", mainHandler)
+	http.ListenAndServe("0.0.0.0:8080", nil)
+}
 
-// const (
-// 	//WelcomeIntent is welcome intent message
-// 	WelcomeIntent = "input.welcome"
-// 	//AskLightIntent is AskLightIntent
-// 	AskLightIntent = "input.asklight"
-// )
+const (
+	//WelcomeIntent is welcome intent message
+	WelcomeIntent = "input.welcome"
+	//AskLightIntent is AskLightIntent
+	AskLightIntent = "input.asklight"
+)
 
-// func mainHandler(w http.ResponseWriter, r *http.Request) {
-// 	req, err := DecodeInput(r)
-// 	if err != nil {
-// 		log.Println(err)
-// 		return
-// 	}
+func mainHandler(w http.ResponseWriter, r *http.Request) {
+	req, err := DecodeInput(r)
+	if err != nil {
+		log.Println(err)
+		return
+	}
 
-// 	var res *Response
-// 	intent := req.GetIntent()
+	// var res *Response
+	intent := req.GetIntent()
 
-// 	switch intent {
-// 	case WelcomeIntent:
-// 		res, err = welcomeIntent(req)
-// 	case AskLightIntent:
-// 		res, err = askLightIntent(req)
-// 	// case AskNowdata:
-// 	// 	res, err = AskNowdata(req)
-// 	}
+	switch intent {
+	case WelcomeIntent:
+		res, err = welcomeIntent(req)
+	case AskLightIntent:
+		res, err = askLightIntent(req)
+	// case AskNowdata:
+	// 	res, err = AskNowdata(req)
+	}
 
-// 	if err != nil {
-// 		log.Println(err)
-// 	}
+	if err != nil {
+		log.Println(err)
+	}
 
-// 	if err = EncodeOutput(w, res); err != nil {
-// 		log.Println(err)
-// 	}
-// }
+	if err = EncodeOutput(w, res); err != nil {
+		log.Println(err)
+	}
+}
 
 
-// func DetectIntentText(projectID, sessionID, text, languageCode string) (string, error) {
-//         ctx := context.Background()
+func DetectIntentText(projectID, sessionID, text, languageCode string) (string, error) {
+        ctx := context.Background()
 
-//         sessionClient, err := dialogflow.NewSessionsClient(ctx)
-//         if err != nil {
-//                 return "", err
-//         }
-//         defer sessionClient.Close()
+        sessionClient, err := dialogflow.NewSessionsClient(ctx)
+        if err != nil {
+                return "", err
+        }
+        defer sessionClient.Close()
 
-//         if projectID == "" || sessionID == "" {
-//                 return "", errors.New(fmt.Sprintf("Received empty project (%s) or session (%s)", projectID, sessionID))
-//         }
+        if projectID == "" || sessionID == "" {
+                return "", errors.New(fmt.Sprintf("Received empty project (%s) or session (%s)", projectID, sessionID))
+        }
 
-//         sessionPath := fmt.Sprintf("projects/%s/agent/sessions/%s", projectID, sessionID)
-//         textInput := dialogflowpb.TextInput{Text: text, LanguageCode: languageCode}
-//         queryTextInput := dialogflowpb.QueryInput_Text{Text: &textInput}
-//         queryInput := dialogflowpb.QueryInput{Input: &queryTextInput}
-//         request := dialogflowpb.DetectIntentRequest{Session: sessionPath, QueryInput: &queryInput}
+        sessionPath := fmt.Sprintf("projects/%s/agent/sessions/%s", projectID, sessionID)
+        textInput := dialogflowpb.TextInput{Text: text, LanguageCode: languageCode}
+        queryTextInput := dialogflowpb.QueryInput_Text{Text: &textInput}
+        queryInput := dialogflowpb.QueryInput{Input: &queryTextInput}
+        request := dialogflowpb.DetectIntentRequest{Session: sessionPath, QueryInput: &queryInput}
 
-//         response, err := sessionClient.DetectIntent(ctx, &request)
-//         if err != nil {
-//                 return "", err
-//         }
+        response, err := sessionClient.DetectIntent(ctx, &request)
+        if err != nil {
+                return "", err
+        }
 
-//         queryResult := response.GetQueryResult()
-//         fulfillmentText := queryResult.GetFulfillmentText()
-//         return fulfillmentText, nil
-// }
+        queryResult := response.GetQueryResult()
+        fulfillmentText := queryResult.GetFulfillmentText()
+        return fulfillmentText, nil
+}
 
 // DecodeInput is Decode Input.
-// func DecodeInput(r *http.Request) (*Request, error) {
-// 	var req Request
-// 	var buf bytes.Buffer
-// 	tee := io.TeeReader(r.Body, &buf)
-// 	defer r.Body.Close()
-// 	err := json.NewDecoder(tee).Decode(&req)
-// 	if err != nil {
-// 		// return nil, fmt.Errorf("decode error: %v", err)
-// 		b, err := ioutil.ReadAll(&buf)
-// 		if err != nil {
-// 			return nil, fmt.Errorf("ioutil error: %v", err)
-// 		}
-// 		log.Printf("%s\n", b)
-// 	}
-// 	return &req, nil
-// }
+func DecodeInput(r *http.Request) (*Request, error) {
+	var req Request
+	var buf bytes.Buffer
+	tee := io.TeeReader(r.Body, &buf)
+	defer r.Body.Close()
+	err := json.NewDecoder(tee).Decode(&req)
+	if err != nil {
+		// return nil, fmt.Errorf("decode error: %v", err)
+		b, err := ioutil.ReadAll(&buf)
+		if err != nil {
+			return nil, fmt.Errorf("ioutil error: %v", err)
+		}
+		log.Printf("%s\n", b)
+	}
+	return &req, nil
+}
 
-// // EncodeOutput is Encode Output
-// func EncodeOutput(w http.ResponseWriter, res *Response) error {
-// 	w.Header().Set("Content-Type", "application/json")
-// 	err := json.NewEncoder(w).Encode(res)
-// 	if err != nil {
-// 		log.Printf("encode error: %v\n", err)
-// 	}
-// 	return nil
-// }
+// EncodeOutput is Encode Output
+func EncodeOutput(w http.ResponseWriter, res *Response) error {
+	w.Header().Set("Content-Type", "application/json")
+	err := json.NewEncoder(w).Encode(res)
+	if err != nil {
+		log.Printf("encode error: %v\n", err)
+	}
+	return nil
+}
 
-// func welcomeIntent(r *Request) (*Response, error) {
-// 	template := `家庭菜園支援VUI APPです．`
-// 	voice := fmt.Sprintf(template)
-// 	return NewResponse(voice).SetDisplayText(voice), nil
-// }
+func welcomeIntent(r *Request) (*Response, error) {
+	template := `家庭菜園支援VUI APPです．`
+	voice := fmt.Sprintf(template)
+	return NewResponse(voice).SetDisplayText(voice), nil
+}
 
-// func askLightIntent(r *Request) (*Response, error) {
-// 	template := `askLightIntentがcallされました．`
-// 	voice := fmt.Sprintf(template)
-// 	return NewResponse(voice).SetDisplayText(voice), nil
-// }
+func askLightIntent(r *Request) (*Response, error) {
+	template := `askLightIntentがcallされました．`
+	voice := fmt.Sprintf(template)
+	return NewResponse(voice).SetDisplayText(voice), nil
+}
 
 func httpResponse() string {
 	//http----------------
