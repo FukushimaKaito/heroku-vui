@@ -114,8 +114,78 @@ func EncodeOutput(w http.ResponseWriter, res *Response) error {
 
 //asklightIntent is mk asklight msg
 func asklightIntent(r *Request) (*Response, error) {
+	//ambient
+	url := "http://ambidata.io/api/v2/channels/10905/data?readKey=7e7df40858ef249c&n=1440"
+	res, err := http.Get(url)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer res.Body.Close()
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		panic(err)
+	}
+	buf := bytes.NewBuffer(body)
+	html := buf.String()
+	fmt.Println(html)
+	bytes := []byte(html)
 
-	msg :=fmt.Sprintf("msg")
+	// //JSONデコード
+	var values []Value
+	if err := json.Unmarshal(bytes, &values); err != nil {
+		log.Fatal(err)
+	}
+
+	//json count
+	high:=0
+	mid:=0
+	low:=0
+    for i:=0;i< 1440;i++{
+        if values[i].Light > 1000{
+			high ++
+		} else if values[i].Light < 300{
+			low ++
+		} else{
+			mid ++
+		}
+	}
+	//mkmsg
+	lightHighest := "光が強すぎます．"
+	lightJust := "光合成にちょうどよい照度継続時間です．"
+	lightHigher := "もう少し光を強くてもいいかもしれません．"
+	lightLack := "光が足りていません．"
+	lightMissing := "は登録されていません．🙇"
+
+	msg:=""
+    if r.Result.Parameters.Vegelight == "ミニトマト"{// positive class
+        if high > 360{
+            msg = lightJust
+		} else if high + mid > 360{
+            msg = lightHigher
+		} else{
+            msg = lightLack
+		}
+	} else if r.Result.Parameters.Vegelight == "ジャガイモ"{// negative class
+        if high > 30 || mid > 180{
+            msg = lightHighest
+		}else if high + mid > 60{
+            msg = lightJust
+		}else{
+            msg = lightLack
+		}
+	}else if r.Result.Parameters.Vegelight =="大葉"{// half class
+        if high > 120 || mid > 180{
+			msg = lightHighest
+		} else if high + mid > 300{
+            msg = lightJust
+		} else{
+            msg = lightLack
+		}
+	}else{
+		msg = r.Result.Parameters.Vegelight + lightMissing
+	}
+	
+	msg =fmt.Sprintf("msg")
 	return NewResponse(msg).SetDisplayText(msg), nil
 }
 
@@ -145,7 +215,7 @@ func asknowIntent(r *Request) (*Response, error) {
 	}
 	//デコードデータの表示
 	fmt.Printf("%f : %f\n", values[0].Light, values[0].Vib)
-	template:="%s現在の振動値は%fGal 、明るさは%flxです．"
+	template:="%s現在の振動値は%.2fGal 、明るさは%.2flxです．"
 	msg :=fmt.Sprintf(template,values[0].DT,values[0].Vib,values[0].Light)
 	return NewResponse(msg).SetDisplayText(msg), nil
 }
