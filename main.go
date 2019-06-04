@@ -17,7 +17,7 @@ import (
 	// "fmt"
 	// "io"
 	// "io/ioutil"
-	// "log"
+	 "log"
 	// "net/http"
 
 	//"cloud.google.com/go/dialogflow/apiv2"
