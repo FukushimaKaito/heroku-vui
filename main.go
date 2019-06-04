@@ -25,7 +25,7 @@ type Value struct {
 
 func main() {
 	http.HandleFunc("/", mainHandler)
-	http.ListenAndServe("35.192.87.192", nil)
+	http.ListenAndServe("0.0.0.0:8080", nil)
 }
 
 const (
