@@ -22,7 +22,7 @@ type RequestResult struct {
 	FulfillmentText           string                 `json:"fulfillmentText"`
 	FulfillmentMessages       map[string]interface{} `json:"fulfillmentMessages"`
 	OutputContexts            map[string]interface{} `json:"outputContexts"`
-	Intent                    map[string]interface{} `json:"intent"`
+	Intent                    string  `json:"intent"`
 	IntentDetectionConfidence int8                   `json:"intentDetectionConfidence"`
 	DiagnosticInfo            map[string]interface{} `json:"diagnosticInfo"`
 	LanguageCode              string                 `json:"languageCode"`
