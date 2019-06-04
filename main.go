@@ -8,7 +8,6 @@ import (
 	"io"
 	"os"
 	//"io/ioutil"
-	"strconv"
 	"log"
 )
 
@@ -56,41 +55,41 @@ func main(){
 
 func handler(w http.ResponseWriter,r *http.Request){
 	//Validate request
-	if r.Method != "POST" {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	// if r.Method != "POST" {
+	// 	w.WriteHeader(http.StatusBadRequest)
+	// 	return
+	// }
 
-	if r.Header.Get("Content-Type") != "application/json" {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	// if r.Header.Get("Content-Type") != "application/json" {
+	// 	w.WriteHeader(http.StatusBadRequest)
+	// 	return
+	// }
 
-	//To allocate slice for request body
-	length, err := strconv.Atoi(r.Header.Get("Content-Length"))
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	// //To allocate slice for request body
+	// length, err := strconv.Atoi(r.Header.Get("Content-Length"))
+	// if err != nil {
+	// 	w.WriteHeader(http.StatusInternalServerError)
+	// 	return
+	// }
 
-	//Read body data to parse json
-	body := make([]byte, length)
-	length, err = r.Body.Read(body)
-	if err != nil && err != io.EOF {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	// //Read body data to parse json
+	// body := make([]byte, length)
+	// length, err = r.Body.Read(body)
+	// if err != nil && err != io.EOF {
+	// 	w.WriteHeader(http.StatusInternalServerError)
+	// 	return
+	// }
 
-	//parse json
-	var jsonBody map[string]interface{}
-	err = json.Unmarshal(body[:length], &jsonBody)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	fmt.Printf("%v\n", jsonBody)
+	// //parse json
+	// var jsonBody map[string]interface{}
+	// err = json.Unmarshal(body[:length], &jsonBody)
+	// if err != nil {
+	// 	w.WriteHeader(http.StatusInternalServerError)
+	// 	return
+	// }
+	// fmt.Printf("%v\n", jsonBody)
 
-	w.WriteHeader(http.StatusOK)  
+	// w.WriteHeader(http.StatusOK)  
 
 
 	req, err := DecodeInput(r)
