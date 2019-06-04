@@ -42,21 +42,21 @@ type Response struct {
 	followupEventInput	map[string]interface{} `json:"followupEventInput"`
 }
 
-func NewResponse(speech string) *Response {
-	return &Response{
-		Speech: speech,
-	}
-}
+// func NewResponse(speech string) *Response {
+// 	return &Response{
+// 	//	Speech: speech,
+// 	}
+// }
 
-func (res *Response) SetDisplayText(text string) *Response {
-	res.DisplayText = text
-	return res
-}
+// func (res *Response) SetDisplayText(text string) *Response {
+// 	res.DisplayText = text
+// 	return res
+// }
 
-func (res *Response) AddContext(ctx *Context) *Response {
-	res.ContextOut = append(res.ContextOut, ctx)
-	return res
-}
+// func (res *Response) AddContext(ctx *Context) *Response {
+// 	res.ContextOut = append(res.ContextOut, ctx)
+// 	return res
+// }
 
 type GoogleData struct {
 	ExpectUserResponse bool              `json:"expectUserResponse"`
