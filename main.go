@@ -8,26 +8,27 @@ import (
 	"io"
 	"os"
 	//"io/ioutil"
+	"strconv"
 	"log"
 )
 
 //Request is request from filfullment
 type Request struct {
-	ID        string                 `json:"responseId"`
-	Result    struct{
+	ID  			    string `json:"responseId"`
+	Result struct{
 		Parameters struct{
-			Vegelight string `json:"Vegelight"`
-		} `json:"parameters"`
+			Vegelight   string `json:"Vegelight"`
+		} 					   `json:"parameters"`
 		Intent struct{
 			DisplayName string `json:"displayName"`
-		} `json:"intent"`
-	}`json:"queryResult"`
-	SessionID string                 `json:"session"`
+		} 					   `json:"intent"`
+	}						   `json:"queryResult"`
+	SessionID			string `json:"session"`
 }
 
 // Response is response for filfullment
 type Response struct{
-	fulfillmentText string `json:"fulfillmentText"`
+	FulfillmentText string `json:"fulfillmentText"`
 }
 
 //NewResponse is new response
@@ -39,7 +40,7 @@ func NewResponse(speech string) *Response {
 
 //SetDisplayText is sendmsg
 func (res *Response) SetDisplayText(text string) *Response {
-	res.fulfillmentText = text
+	res.FulfillmentText = text
 	return res
 }
 
@@ -54,6 +55,44 @@ func main(){
 }
 
 func handler(w http.ResponseWriter,r *http.Request){
+	//Validate request
+	if r.Method != "POST" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if r.Header.Get("Content-Type") != "application/json" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	//To allocate slice for request body
+	length, err := strconv.Atoi(r.Header.Get("Content-Length"))
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	//Read body data to parse json
+	body := make([]byte, length)
+	length, err = r.Body.Read(body)
+	if err != nil && err != io.EOF {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	//parse json
+	var jsonBody map[string]interface{}
+	err = json.Unmarshal(body[:length], &jsonBody)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	fmt.Printf("%v\n", jsonBody)
+
+	w.WriteHeader(http.StatusOK)  
+
+
 	req, err := DecodeInput(r)
 	if err != nil {
 		log.Println(err)
