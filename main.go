@@ -13,7 +13,7 @@ import (
 	"log"
 	"net/http"
 
-	"cloud.google.com/go/dialogflow/apiv2"
+	// "cloud.google.com/go/dialogflow/apiv2"
 )
 
 // Value is JSONデコード用の構造体
