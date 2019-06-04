@@ -157,7 +157,7 @@ func asklightIntent(r *Request) (*Response, error) {
 	lightMissing := "は登録されていません．🙇"
 
 	msg := ""
-	if r.Result.Parameters.Vegelight == "ミニトマト" { // positive class
+	if r.Result.Parameters.Vegelight == "トマト" { // positive class
 		if high > 360 {
 			msg = fmt.Sprintf(lightJust)
 		} else if high+mid > 360 {
@@ -173,7 +173,7 @@ func asklightIntent(r *Request) (*Response, error) {
 		} else {
 			msg = fmt.Sprintf(lightLack)
 		}
-	} else if r.Result.Parameters.Vegelight == "大葉" { // half class
+	} else if r.Result.Parameters.Vegelight == "シソ" { // half class
 		if high > 120 || mid > 180 {
 			msg = fmt.Sprintf(lightHighest)
 		} else if high+mid > 300 {
