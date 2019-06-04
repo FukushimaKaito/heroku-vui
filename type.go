@@ -42,19 +42,19 @@ type Response struct {
 	followupEventInput	map[string]interface{} `json:"followupEventInput"`
 }
 
-// func NewResponse(speech string) *Response {
-// 	return &Response{
-// 	//	Speech: speech,
-// 	}
-// }
+func NewResponse(speech string) *Response {
+	return &Response{
+	//	Speech: speech,
+	}
+}
 
-// func (res *Response) SetDisplayText(text string) *Response {
-// 	res.DisplayText = text
-// 	return res
-// }
+func (res *Response) SetDisplayText(text string) *Response {
+	res.fulfillmentText = text
+	return res
+}
 
-// func (res *Response) AddContext(ctx *Context) *Response {
-// 	res.ContextOut = append(res.ContextOut, ctx)
+// func (res *Response) AddContext(ctx *OutputContexts) *Response {
+// 	res.OutputContexts = append(res.OutputContexts, ctx)
 // 	return res
 // }
 
