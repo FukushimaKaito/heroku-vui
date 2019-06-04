@@ -42,7 +42,7 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// var res *Response
+	var res *Response
 	intent := req.GetIntent()
 
 	switch intent {
