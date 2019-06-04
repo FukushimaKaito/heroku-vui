@@ -1,1 +1,1 @@
-web: bin/heroku-vui
+web: bin/main
