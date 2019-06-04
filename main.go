@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"os"
 	//"io/ioutil"
 	"log"
 )
@@ -45,7 +46,8 @@ func (res *Response) SetDisplayText(text string) *Response {
 
 func main(){
 	http.HandleFunc("/",handler)
-	http.ListenAndServe(":8080",nil)
+	port := os.Getenv("PORT")
+	http.ListenAndServe(":"+port,nil)
 }
 
 func handler(w http.ResponseWriter,r *http.Request){
