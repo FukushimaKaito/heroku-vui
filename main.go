@@ -184,8 +184,6 @@ func asklightIntent(r *Request) (*Response, error) {
 	}else{
 		msg = r.Result.Parameters.Vegelight + lightMissing
 	}
-	
-	msg =fmt.Sprintf("msg")
 	return NewResponse(msg).SetDisplayText(msg), nil
 }
 
