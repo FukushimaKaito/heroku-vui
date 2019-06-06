@@ -162,7 +162,7 @@ func decodeAmbient(url string) []Value {
 	}
 	buf := bytes.NewBuffer(body)
 	html := buf.String()
-	fmt.Println(html)
+	//fmt.Println(html)
 
 	//JSON---------------
 	bytes := []byte(html)
