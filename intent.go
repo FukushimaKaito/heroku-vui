@@ -11,18 +11,6 @@ import (
 	"os"
 )
 
-const (
-	//return message
-	lightHighest = "光が強すぎます．"
-	lightJust    = "光合成にちょうどよい照度継続時間です．"
-	lightHigher  = "もう少し光を強くてもいいかもしれません．"
-	lightLack    = "光が足りていません．"
-	lightMissing = "は登録されていません．🙇"
-
-	nowresponse   = "%s現在の振動値は%.2fGal 、明るさは%.2flxです．"
-	countresponse = "強い光が%d分，明るい光が%d分，暗い状態が%d分です．"
-)
-
 //NewResponse is new response
 func NewResponse(speech string) *Response {
 	return &Response{
